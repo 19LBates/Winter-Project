@@ -1,27 +1,22 @@
+#IMPORT MODULES
+from calendar import c
+import os
 
 #SETUP CLASSES
+from asyncio.windows_events import NULL
+
+
 class Player:
     def __init__(self):
-        self.health = 100
+        self.health = 10
+        self.inventory = []
         
 class Area:
     def __init__(self, name):
         self.name = name
         self.entities = []
         self.items = []
-        self.borderAreas = []
-        
-    def addEntity(self, entity):
-        self.entities += entity
-        
-    def addItem(self, item):
-        self.items += item
-        
-    def delEntity(self, entity):
-        self.entities.remove(entity)
-        
-    def delItem(self, item):
-        self.items.remove(item)
+        self.borderAreas = []       
   
 class Entity:
     def __init__(self, name, health):
@@ -34,21 +29,47 @@ class Item:
  
 
 #SETUP FUNCTIONS
-def travel(curArea, newArea):  
+def travel(curArea):
+    listBorderAreas(curArea)
+    areaList = curArea.borderAreas
+    choice = input("\nEnter your choice: ")
+    print(choice)
     
-    if newArea in curArea.borderAreas:
-        print(f"Travelled from {curArea.name} to {newArea.name}")
+    if choice == "1":
+        clear()
+        print(f"You have stayed in {curArea.name} \n")
+        return curArea
+    
+    try:
+        newArea = areaList[int(choice)-2]
+    except:
+        clear()
+        print("Invalid input. Please try again. \n")
+        travel(curArea)
+    else:
+        clear()
+        print(f"You have travelled from {curArea.name} to {newArea.name} \n")
         return newArea
+        
     
-    print(f"Could not travel from {curArea.name} to {newArea.name}")
-    return curArea
+def listBorderAreas(area):
+    areaList = area.borderAreas  
+    print(f"1 - Remain in {area.name}")
+    i = 2
+    for area in areaList:
+        print(f"{i} - Travel to {area.name}")
+        i += 1
+
+def clear():
+    os.system('cls||clear')
+    
 
 
 def main(player):
     #CREATE AREAS
-    forest =    Area("Forest")
-    desert =    Area("Desert")
-    village =   Area("Village")
+    forest =    Area("The Forest")
+    desert =    Area("The Desert")
+    village =   Area("The Village")
     
     forest.borderAreas =    [desert, village]
     desert.borderAreas =    [forest]
@@ -68,17 +89,7 @@ def main(player):
     area = forest
     
     #MAIN LOOP
-    while True:
-        travel(forest, forest)
-        travel(forest, desert)
-        travel(forest, village)
-        travel(desert, forest)
-        travel(desert, desert)
-        travel(desert, village)
-        travel(village, forest)
-        travel(village, desert)
-        travel(village, village)
-        input()
+    area = travel(area)
  
 #RUN GAME
 if __name__ == "__main__":
