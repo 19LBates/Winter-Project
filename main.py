@@ -12,8 +12,9 @@ class Player:
         self.inventory = []
         
 class Area:
-    def __init__(self, name):
+    def __init__(self, name, desc):
         self.name = name
+        self.desc = desc
         self.entities = []
         self.items = []
         self.borderAreas = []       
@@ -67,13 +68,34 @@ def clear():
 
 def main(player):
     #CREATE AREAS
-    forest =    Area("The Forest")
-    desert =    Area("The Desert")
-    village =   Area("The Village")
+    forest =    Area("The Forest", "")
+    plainsW =   Area("A Grassland", "")
+    village =   Area("The Village", "")
+    savanna =   Area("The Savanna", "")
+    desert =    Area("The Desert", "")
+    mountain =  Area("The Great Mountain", "")
+    hut =       Area("The Mountain Hut", "")
+    hillsNW =   Area("Some Hills", "")
+    plainsN =   Area("A Grassland", "")
+    desertN =   Area("The Frozen Desert", "")
+    hillsNE =   Area("Some Hills", "")
+    valleyN =   Area("A Valley", "")
+    pond =      Area("A Pond", "")
+    valleyE =   Area("A Valley", "")
+    ruins =     Area("The Ruins", "")
+    plainsE =   Area("A Grassland", "")
+    graves =    Area("The Graveyard", "")
+    church =    Area("The Church", "")
+    cityE =     Area("The City", "")
+    cityW =     Area("The City", "")
+    hillsS =    Area("Some Hills", "")
+    valleyS =   Area("A Valley", "")
+    lake =      Area("The Lake", "")
+    obelisk =   Area("The Obelisk", "")
     
-    forest.borderAreas =    [desert, village]
-    desert.borderAreas =    [forest]
-    village.borderAreas =   [forest]
+#    forest.borderAreas =    [desert, village]
+#    desert.borderAreas =    [forest]
+#    village.borderAreas =   [forest]
     
     #CREATE ENTITIES
     goblin =    Entity("Goblin", 8)
