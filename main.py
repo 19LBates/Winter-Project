@@ -1,11 +1,7 @@
 #IMPORT MODULES
-from calendar import c
 import os
 
 #SETUP CLASSES
-from asyncio.windows_events import NULL
-
-
 class Player:
     def __init__(self):
         self.health = 10
