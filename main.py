@@ -82,16 +82,16 @@ def main(player):
     plainsE =   Area("A Grassland", "")
     graves =    Area("The Graveyard", "")
     church =    Area("The Church", "")
-    cityE =     Area("The City", "")
-    cityW =     Area("The City", "")
+    cityE =     Area("The East Side of The City", "")
+    cityW =     Area("The West Side of The City", "")
     hillsS =    Area("Some Hills", "")
     valleyS =   Area("A Valley", "")
     lake =      Area("The Lake", "")
     obelisk =   Area("The Obelisk", "")
     
-#    forest.borderAreas =    [desert, village]
-#    desert.borderAreas =    [forest]
-#    village.borderAreas =   [forest]
+    forest.borderAreas =    [desert, village]
+    desert.borderAreas =    [forest]
+    village.borderAreas =   [forest]
     
     #CREATE ENTITIES
     goblin =    Entity("Goblin", 8)
