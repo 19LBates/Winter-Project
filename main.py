@@ -30,7 +30,6 @@ def travel(curArea):
     listBorderAreas(curArea)
     areaList = curArea.borderAreas
     choice = input("\nEnter your choice: ")
-    print(choice)
     
     if choice == "1":
         clear()
@@ -59,7 +58,21 @@ def listBorderAreas(area):
 
 def clear():
     os.system('cls||clear')
-    
+
+def mainChoice(choices):
+    i = 1
+    for c in choices:
+        print(f"{i} - {c}")
+        i += 1
+
+    choice = input("\nEnter your choice: ")
+    try:
+        choices[int(choice)-1]
+        return int(choice) - 1
+    except:
+        clear()
+        print("Invalid input. Please try again \n")
+        mainChoice(choices)
 
 
 def main(player):
@@ -107,7 +120,7 @@ def main(player):
     area = forest
     
     #MAIN LOOP
-    area = travel(area)
+    print(mainChoice(["a", "b", "c", "d"]))
  
 #RUN GAME
 if __name__ == "__main__":
