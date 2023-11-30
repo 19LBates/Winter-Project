@@ -13,7 +13,7 @@ class Area:
         self.desc = desc
         self.entities = []
         self.items = []
-        self.borderAreas = []       
+        self.borderAreas = []     
   
 class Entity:
     def __init__(self, name, health):
@@ -26,6 +26,24 @@ class Item:
  
 
 #SETUP FUNCTIONS
+def createBorderAreas(areas):
+    cur = 0
+    
+    for area in areas:
+        if cur == 0: 
+            before = len(areas) - 1
+        else:
+            before = cur - 1
+            
+        if cur == len(areas) - 1: 
+            after = 0
+        else:
+            after = cur + 1
+            
+        area.borderAreas.append(areas[before])
+        area.borderAreas.append(areas[after])
+       
+
 def travel(curArea):
     listBorderAreas(curArea)
     areaList = curArea.borderAreas
@@ -68,17 +86,18 @@ def mainChoice(choices):
     choice = input("\nEnter your choice: ")
     try:
         choices[int(choice)-1]
-        return int(choice) - 1
     except:
         clear()
-        print("Invalid input. Please try again \n")
+        print("Invalid input. Please try again. \n")
         mainChoice(choices)
+    else:
+        return int(choice)
 
 
 def main(player):
     #CREATE AREAS
     forest =    Area("The Forest", "")
-    plainsW =   Area("A Grassland", "")
+    plainsW =   Area("a Grassland", "")
     village =   Area("The Village", "")
     savanna =   Area("The Savanna", "")
     desert =    Area("The Desert", "")
@@ -88,23 +107,22 @@ def main(player):
     plainsN =   Area("A Grassland", "")
     desertN =   Area("The Frozen Desert", "")
     hillsNE =   Area("Some Hills", "")
-    valleyN =   Area("A Valley", "")
-    pond =      Area("A Pond", "")
-    valleyE =   Area("A Valley", "")
+    valleyN =   Area("a Valley", "")
+    pond =      Area("The Pond", "")
+    valleyE =   Area("a Valley", "")
     ruins =     Area("The Ruins", "")
-    plainsE =   Area("A Grassland", "")
+    plainsE =   Area("a Grassland", "")
     graves =    Area("The Graveyard", "")
     church =    Area("The Church", "")
     cityE =     Area("The East Side of The City", "")
     cityW =     Area("The West Side of The City", "")
     hillsS =    Area("Some Hills", "")
-    valleyS =   Area("A Valley", "")
+    valleyS =   Area("a Valley", "")
     lake =      Area("The Lake", "")
     obelisk =   Area("The Obelisk", "")
     
-    forest.borderAreas =    [desert, village]
-    desert.borderAreas =    [forest]
-    village.borderAreas =   [forest]
+    createBorderAreas([forest, plainsW, village, savanna, desert, mountain, hut, hillsNW, plainsN, desertN, hillsNE, valleyN, 
+                       pond, valleyE, ruins, plainsE, graves, church, cityE, cityW, hillsS, valleyS, lake, obelisk])
     
     #CREATE ENTITIES
     goblin =    Entity("Goblin", 8)
@@ -119,8 +137,8 @@ def main(player):
     #SETUP VARIABLES
     area = forest
     
-    #MAIN LOOP
-    print(mainChoice(["a", "b", "c", "d"]))
+    #MAIN LOOP)
+    travel(forest)
  
 #RUN GAME
 if __name__ == "__main__":
