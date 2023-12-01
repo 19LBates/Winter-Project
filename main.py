@@ -42,6 +42,8 @@ def createBorderAreas(areas):
             
         area.borderAreas.append(areas[before])
         area.borderAreas.append(areas[after])
+
+        cur += 1
        
 
 def travel(curArea):
@@ -59,7 +61,7 @@ def travel(curArea):
     except:
         clear()
         print("Invalid input. Please try again. \n")
-        travel(curArea)
+        return travel(curArea)
     else:
         clear()
         print(f"You have travelled from {curArea.name} to {newArea.name} \n")
@@ -89,7 +91,7 @@ def mainChoice(choices):
     except:
         clear()
         print("Invalid input. Please try again. \n")
-        mainChoice(choices)
+        return mainChoice(choices)
     else:
         return int(choice)
 
@@ -97,33 +99,42 @@ def mainChoice(choices):
 def main(player):
     #CREATE AREAS
     forest =    Area("The Forest", "")
-    plainsW =   Area("a Grassland", "")
+    plainsW =   Area("The Western Grassland", "")
     village =   Area("The Village", "")
     savanna =   Area("The Savanna", "")
     desert =    Area("The Desert", "")
     mountain =  Area("The Great Mountain", "")
     hut =       Area("The Mountain Hut", "")
-    hillsNW =   Area("Some Hills", "")
-    plainsN =   Area("A Grassland", "")
+    hillsNW =   Area("The Northern Hills", "")
+    plainsN =   Area("The Northern Grassland", "")
     desertN =   Area("The Frozen Desert", "")
     hillsNE =   Area("Some Hills", "")
-    valleyN =   Area("a Valley", "")
+    valleyN =   Area("The Valley", "")
     pond =      Area("The Pond", "")
-    valleyE =   Area("a Valley", "")
+    valleyE =   Area("The Valley", "")
     ruins =     Area("The Ruins", "")
-    plainsE =   Area("a Grassland", "")
+    plainsE =   Area("The Eastern Grassland", "")
     graves =    Area("The Graveyard", "")
     church =    Area("The Church", "")
     cityE =     Area("The East Side of The City", "")
     cityW =     Area("The West Side of The City", "")
-    hillsS =    Area("Some Hills", "")
-    valleyS =   Area("a Valley", "")
+    hillsS =    Area("The Southern Hills", "")
+    valleyS =   Area("The Southern Valley", "")
     lake =      Area("The Lake", "")
     obelisk =   Area("The Obelisk", "")
     
     createBorderAreas([forest, plainsW, village, savanna, desert, mountain, hut, hillsNW, plainsN, desertN, hillsNE, valleyN, 
                        pond, valleyE, ruins, plainsE, graves, church, cityE, cityW, hillsS, valleyS, lake, obelisk])
-    
+
+    eeriePlains = Area("The Eerie Grassland", "")
+    gate = Area("The Portal Gate", "")
+    portal = Area("The Swirling Portal", "")
+
+    desertN.borderAreas.append(eeriePlains)
+    eeriePlains.borderAreas = [desertN, gate]
+    gate.borderAreas = [eeriePlains, portal]
+    portal.borderAreas = [gate]
+
     #CREATE ENTITIES
     goblin =    Entity("Goblin", 8)
     spider =    Entity("Spider", 3)
@@ -138,7 +149,12 @@ def main(player):
     area = forest
     
     #MAIN LOOP)
-    travel(forest)
+    clear()
+    while True:
+
+        #choice = mainChoice(["Travel to a different area", "crip"])
+        area = travel(area)
+    
  
 #RUN GAME
 if __name__ == "__main__":
