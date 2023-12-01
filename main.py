@@ -77,7 +77,7 @@ def listBorderAreas(area):
     for area in areaList:
         print(f"{i} - Travel to {area.name}")
         i += 1
-        
+
 
 def clear():
     os.system('cls||clear')
@@ -173,12 +173,17 @@ def main(player):
     #SETUP VARIABLES
     area = forest
     
-    #MAIN LOOP)
-    clear()
+    #MAIN LOOP
+    while True:
+        choice = mainChoice(["Travel to another area", "Fight a monster"])
 
-    forest.entities.append(goblin)
-
-    fight(forest, player, goblin)
+        if choice == 1:
+            clear()
+            area = travel(area)
+        
+        if choice == 2:
+            clear()
+            fight(area.entities[0])
     
  
 #RUN GAME
