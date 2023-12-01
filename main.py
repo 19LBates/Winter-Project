@@ -1,11 +1,13 @@
 #IMPORT MODULES
 import os
+import random
 
 #SETUP CLASSES
 class Player:
     def __init__(self):
-        self.health = 10
+        self.lives = 10
         self.inventory = []
+        self.str = 5
         
 class Area:
     def __init__(self, name, desc):
@@ -16,9 +18,9 @@ class Area:
         self.borderAreas = []     
   
 class Entity:
-    def __init__(self, name, health):
+    def __init__(self, name, str):
         self.name = name
-        self.health = health
+        self.str = str
         
 class Item:
     def __init__(self, name):
@@ -75,9 +77,11 @@ def listBorderAreas(area):
     for area in areaList:
         print(f"{i} - Travel to {area.name}")
         i += 1
+        
 
 def clear():
     os.system('cls||clear')
+
 
 def mainChoice(choices):
     i = 1
@@ -94,6 +98,29 @@ def mainChoice(choices):
         return mainChoice(choices)
     else:
         return int(choice)
+    
+
+def fight(area, player, monster):
+    playerDice = random.randint(1, 6)
+    monsterDice = random.randint(1, 6)
+    playerFinalStr = player.str + playerDice
+    monsterFinalStr = monster.str + monsterDice
+
+    print(f"Your strength is {player.str}, and you rolled a {playerDice}. Your final strength is therefore {playerFinalStr}.")
+    print(f"The {monster.name}'s strength is {monster.str}, and it rolled a {monsterDice}. Its final strength is therefore {monsterFinalStr}.")
+
+    if playerFinalStr > monsterFinalStr:
+        area.entities.remove(monster)
+        print(f"You defeated the {monster.name}!")
+        return
+    
+    if monsterFinalStr > playerFinalStr:
+        player.lives += -1
+        print(f"The {monster.name} overpowered you! You have {player.lives} lives remaining.")
+        return
+    
+    print(f"You and the {monster.name} bought each other to a draw.")
+        
 
 
 def main(player):
@@ -136,9 +163,7 @@ def main(player):
     portal.borderAreas = [gate]
 
     #CREATE ENTITIES
-    goblin =    Entity("Goblin", 8)
-    spider =    Entity("Spider", 3)
-    mummy =     Entity("Mummy" , 9)
+    goblin =    Entity("Goblin", 3)
     
     #CREATE ITEMS
     stick =     Item("Stick")
@@ -150,10 +175,10 @@ def main(player):
     
     #MAIN LOOP)
     clear()
-    while True:
 
-        #choice = mainChoice(["Travel to a different area", "crip"])
-        area = travel(area)
+    forest.entities.append(goblin)
+
+    fight(forest, player, goblin)
     
  
 #RUN GAME
