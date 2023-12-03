@@ -1,15 +1,16 @@
-#IMPORT MODULES
-from operator import inv
+﻿#IMPORT MODULES
 import os
 import random
 
 #SETUP CLASSES
 class Player:
     def __init__(self):
-        self.lives = 10
+        self.lives = 1
+        self.maxLives = 1
         self.inventory = []
-        self.str = 5
+        self.str = 0
         self.gold = 0
+        self.cls = ""
         
 class Area:
     def __init__(self, name, desc = ""):
@@ -152,6 +153,7 @@ def fight(area, player, monster):
 
 
 def viewStats(player):
+    print(f"Class: {player.cls}\n")
     print(f"Lives remaining: {player.lives}")
     print(f"Strength: {player.str}")
     print(f"Gold coins: {player.gold}")
@@ -164,14 +166,65 @@ def viewStats(player):
     for item in player.inventory:
         print(f"{item.name}: {item.desc}")
         return
-    
+   
 
-def tavern(player):
+def chooseClass(player):
+    print("Pick one of the following classes:")
+    print("1 - Beserk:  3 Lives, 5 Strength, 1 Gold Coin")
+    print("2 - Tank:    5 Lives, 3 Strength, 1 Gold Coin")
+    print("3 - Trader:  3 Lives, 3 Strength, 4 Gold Coins")
+    print("4 - Wizard:  2 Lives, 2 Strength, 2 Gold Coins")
+    
+    choice = input("\nEnter your choice: ")
+    
+    if not choice in ["1", "2", "3", "4"]:
+        clear()
+        print("Invalid input. Please try again.\n")
+        return chooseClass(player)
+
+    if choice == "1":
+        player.lives = 3
+        player.str = 5
+        player.gold = 1
+        player.cls = "Berserk"
+
+    if choice == "2":
+        player.lives = 5
+        player.str = 3
+        player.gold = 1
+        player.cls = "Tank"
+
+    if choice == "3":
+        player.lives = 3
+        player.str = 3
+        player.gold = 4
+        player.cls = "Trader"
+
+    if choice == "4":
+        player.lives = 2
+        player.str = 2
+        player.gold = 2
+        player.cls = "Wizard"
+   
+    player.maxLives = player.lives
+    clear()
+
+
+def shop(area, player):
     return
+
 
 def mystic(player):
     return
         
+def obeliskInspect(player):
+    if player.cls == "Wizard":
+        print("You walk up to the obelisk and see an inscribed message:")
+        print("Place a gold coin on thee, and magic powers you will see...")
+        return
+    
+    print("You walk up to the obelisk and see an inscribed message:")
+    print("!¡ꖎᔑᓵᒷ ᔑ ⊣𝙹ꖎ↸ coin 𝙹リ thee, ᔑリ↸ ᒲᔑ⊣╎ᓵ powers ||𝙹⚍ ∴╎ꖎꖎ ᓭᒷᒷ")
 
 def main(player):
     #CREATE AREAS
@@ -224,6 +277,9 @@ def main(player):
     #SETUP VARIABLES
     area = forest
     
+    #PRE-GAME
+    chooseClass(player)
+
     #MAIN LOOP
     while True:
         
@@ -241,6 +297,9 @@ def main(player):
         if area == village:
             choices.append("Visit the tavern")
             choices.append("Visit the mystic")
+            
+        if area == obelisk:
+            choices.append("Inspect the obelisk")
 
         print("Choose what to do:")
         choice = mainChoice(choices)
@@ -258,10 +317,21 @@ def main(player):
             chooseMonster(area, player)
             
         if choice == "Visit the tavern":
-            tavern(player)            
+            clear()
+            shop(village, player)            
 
         if choice == "Visit the mystic":
+            clear()
             mystic(player)
+            
+        if choice == "Inspect the obelisk":
+            clear()
+            obeliskInspect(player)
+            
+        if player.lives <= 0:
+            clear()
+            print("You have run out of lives! \nGame over... \n")
+            break
             
         input("\nPress enter to continue...")
         clear()

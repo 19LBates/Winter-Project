@@ -1,4 +1,4 @@
 # Winter-Project
-Version: Alpha 0.2
-Updated: 20:49 on 21 November 2023
+Version: Alpha 0.6
+Updated: 10:52 on 03 December 2023
 Made by: Lucas Bates
