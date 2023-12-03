@@ -1,4 +1,5 @@
 #IMPORT MODULES
+from operator import inv
 import os
 import random
 
@@ -8,9 +9,10 @@ class Player:
         self.lives = 10
         self.inventory = []
         self.str = 5
+        self.gold = 0
         
 class Area:
-    def __init__(self, name, desc):
+    def __init__(self, name, desc = ""):
         self.name = name
         self.desc = desc
         self.entities = []
@@ -18,13 +20,15 @@ class Area:
         self.borderAreas = []     
   
 class Entity:
-    def __init__(self, name, str):
+    def __init__(self, name, str, gold = 0):
         self.name = name
         self.str = str
+        self.gold = gold
         
 class Item:
-    def __init__(self, name):
+    def __init__(self, name, desc = ""):
         self.name = name
+        self.desc = desc
  
 
 #SETUP FUNCTIONS
@@ -55,7 +59,7 @@ def travel(curArea):
     
     if choice == "1":
         clear()
-        print(f"You have stayed in {curArea.name} \n")
+        print(f"You have stayed in {curArea.name}.")
         return curArea
     
     try:
@@ -66,7 +70,7 @@ def travel(curArea):
         return travel(curArea)
     else:
         clear()
-        print(f"You have travelled from {curArea.name} to {newArea.name} \n")
+        print(f"You have travelled from {curArea.name} to {newArea.name}.")
         return newArea
         
     
@@ -77,7 +81,29 @@ def listBorderAreas(area):
     for area in areaList:
         print(f"{i} - Travel to {area.name}")
         i += 1
+        
 
+def chooseMonster(area, player):
+    monsters = area.entities
+    i = 2
+    print("Monsters to fight:")
+    print("1 - Cancel fight")
+    for monster in monsters:
+        print(f"{i} - {monster.name}: Has {monster.str} Strength, Carrying {monster.gold} Gold Coins")
+        
+    choice = input("\nEnter your choice: ")
+    
+    if choice == "1": return
+    try:
+        monsters[int(choice)-2]
+    except:
+        clear()
+        print("Invalid input. Please try again. \n")
+        return chooseMonster(area, player)
+    else: 
+        clear()
+        fight(area, player, monsters[int(choice)-2])
+        return
 
 def clear():
     os.system('cls||clear')
@@ -97,7 +123,7 @@ def mainChoice(choices):
         print("Invalid input. Please try again. \n")
         return mainChoice(choices)
     else:
-        return int(choice)
+        return choices[int(choice)-1]
     
 
 def fight(area, player, monster):
@@ -111,59 +137,75 @@ def fight(area, player, monster):
 
     if playerFinalStr > monsterFinalStr:
         area.entities.remove(monster)
-        print(f"You defeated the {monster.name}!")
+        print(f"\nYou defeated the {monster.name}!")
+        player.gold += monster.gold
+        print(f"You got {monster.gold} gold coins from the monster. You now have {player.gold} gold coins.")
         return
     
     if monsterFinalStr > playerFinalStr:
         player.lives += -1
-        print(f"The {monster.name} overpowered you! You have {player.lives} lives remaining.")
+        print(f"\nThe {monster.name} overpowered you! You have {player.lives} lives remaining.")
         return
     
-    print(f"You and the {monster.name} bought each other to a draw.")
-        
+    print(f"\nYou and the {monster.name} bought each other to a draw.")
 
+
+def viewStats(player):
+    print(f"Lives remaining: {player.lives}")
+    print(f"Strength: {player.str}")
+    print(f"Gold coins: {player.gold}")
+    
+    if len(player.inventory) == 0:
+        print("Inventory: Empty")
+        return
+
+    print("\nInventory:")
+    for item in player.inventory:
+        print(f"{item.name}: {item.desc}")
+        return
+        
 
 def main(player):
     #CREATE AREAS
-    forest =    Area("The Forest", "")
-    plainsW =   Area("The Western Grassland", "")
-    village =   Area("The Village", "")
-    savanna =   Area("The Savanna", "")
-    desert =    Area("The Desert", "")
-    mountain =  Area("The Great Mountain", "")
-    hut =       Area("The Mountain Hut", "")
-    hillsNW =   Area("The Northern Hills", "")
-    plainsN =   Area("The Northern Grassland", "")
-    desertN =   Area("The Frozen Desert", "")
-    hillsNE =   Area("Some Hills", "")
-    valleyN =   Area("The Valley", "")
-    pond =      Area("The Pond", "")
-    valleyE =   Area("The Valley", "")
-    ruins =     Area("The Ruins", "")
-    plainsE =   Area("The Eastern Grassland", "")
-    graves =    Area("The Graveyard", "")
-    church =    Area("The Church", "")
-    cityE =     Area("The East Side of The City", "")
-    cityW =     Area("The West Side of The City", "")
-    hillsS =    Area("The Southern Hills", "")
-    valleyS =   Area("The Southern Valley", "")
-    lake =      Area("The Lake", "")
-    obelisk =   Area("The Obelisk", "")
+    forest =    Area("The Forest", "a large, luscious forest with many trees all around you")
+    plainsW =   Area("The Western Grassland", "a stretch of flat, grass-filled land")
+    village =   Area("The Village", "a small, medieval village, dotted with rickety houses")
+    savanna =   Area("The Savanna", "a stretch of warm grassland, with a few trees dotted around")
+    desert =    Area("The Desert", "a hot, dry and empty stretch of sand")
+    mountain =  Area("The Great Mountain", "a large mountain, with steep, rocky sides")
+    hut =       Area("The Mountain Hut", "a small hut situated on a flat area of the mounatin")
+    hillsNW =   Area("The Northern Hills", "a stretch of hilly grassland")
+    plainsN =   Area("The Northern Grassland", "a stretch of flat, grass-filled land")
+    desertN =   Area("The Frozen Desert", "a large, deserted area, filled with snow and ice")
+    hillsNE =   Area("Some Hills", "a stretch of hilly grassland")
+    valleyN =   Area("The Valley", "an area surrounded by many hills")
+    pond =      Area("The Pond", "a small pond, home to a few ducks")
+    valleyE =   Area("The Valley", "an area surrounded by many hills")
+    ruins =     Area("The Ruins", "the remnants of a great castle that stood here almost a thousand years ago")
+    plainsE =   Area("The Eastern Grassland", "a stretch of flat, grass-filled land")
+    graves =    Area("The Graveyard", "a fenced-off area, with the graves of many dead souls")
+    church =    Area("The Church", "a secluded and eerily empty church")
+    cityE =     Area("The East Side of The City", "an old city, once home to many, but now barely populated")
+    cityW =     Area("The West Side of The City", "an old city, once home to many, but now barely populated")
+    hillsS =    Area("The Southern Hills", "a stretch of hilly grassland")
+    valleyS =   Area("The Southern Valley", "an area surrounded by many hills")
+    lake =      Area("The Lake", "a great, deep-blue lake")
+    obelisk =   Area("The Obelisk", "a large stone obelisk, surrounded with mist")
     
     createBorderAreas([forest, plainsW, village, savanna, desert, mountain, hut, hillsNW, plainsN, desertN, hillsNE, valleyN, 
                        pond, valleyE, ruins, plainsE, graves, church, cityE, cityW, hillsS, valleyS, lake, obelisk])
 
-    eeriePlains = Area("The Eerie Grassland", "")
-    gate = Area("The Portal Gate", "")
-    portal = Area("The Swirling Portal", "")
+    eeriePlains = Area("The Eerie Grassland", "a stretch of grassland, with eerie mists falling to the ground")
+    gate = Area("The Portal Gate", "a large, stone gate that prevents you from progressing further")
+    portal = Area("The Swirling Portal", "a swirling, screaming portal")
 
     desertN.borderAreas.append(eeriePlains)
     eeriePlains.borderAreas = [desertN, gate]
-    gate.borderAreas = [eeriePlains, portal]
+    gate.borderAreas = [eeriePlains] #ADD PORTAL LATER AS AN ACTION (USING A KEY)
     portal.borderAreas = [gate]
 
     #CREATE ENTITIES
-    goblin =    Entity("Goblin", 3)
+    goblin =    Entity("Goblin", 3, 2)
     
     #CREATE ITEMS
     stick =     Item("Stick")
@@ -173,17 +215,45 @@ def main(player):
     #SETUP VARIABLES
     area = forest
     
+    forest.entities.append(goblin)
+    
     #MAIN LOOP
-    while True:
-        choice = mainChoice(["Travel to another area", "Fight a monster"])
 
-        if choice == 1:
+    while True:
+        
+        choices = ["View stats", "Travel to another area"]
+        print(f"You are currently in {area.name}: {area.desc}.\n")
+        
+        if len(area.entities) == 1:
+            choices.append("Fight a monster")
+            print(f"There is a monster in this area.\n")
+            
+        if len(area.entities) > 1:
+            choices.append("Fight a monster")
+            print(f"There are {len(area.entities)} monsters in this area.\n")
+            
+        if area == village:
+            choices.append("Visit the tavern")
+            choices.append("Visit the mystic")
+
+        print("Choose what to do:")
+        choice = mainChoice(choices)
+        
+        if choice == "View stats":
+            clear()
+            viewStats(player)
+ 
+        if choice == "Travel to another area":
             clear()
             area = travel(area)
-        
-        if choice == 2:
+       
+        if choice == "Fight a monster":
             clear()
-            fight(area.entities[0])
+            chooseMonster(area, player)
+            
+        input("\nPress enter to continue...")
+        clear()
+                
     
  
 #RUN GAME
