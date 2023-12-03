@@ -11,6 +11,7 @@ class Player:
         self.str = 0
         self.gold = 0
         self.cls = ""
+        self.obeliskUses = 0
         
 class Area:
     def __init__(self, name, desc = ""):
@@ -129,7 +130,7 @@ def mainChoice(choices):
     
 
 def fight(area, player, monster):
-    playerDice = random.randint(1, 6)
+    playerDice = dice(player, 1, 6, "high")
     monsterDice = random.randint(1, 6)
     playerFinalStr = player.str + playerDice
     monsterFinalStr = monster.str + monsterDice
@@ -173,7 +174,7 @@ def chooseClass(player):
     print("1 - Beserk:  3 Lives, 5 Strength, 1 Gold Coin")
     print("2 - Tank:    5 Lives, 3 Strength, 1 Gold Coin")
     print("3 - Trader:  3 Lives, 3 Strength, 4 Gold Coins")
-    print("4 - Wizard:  2 Lives, 2 Strength, 2 Gold Coins")
+    print("4 - Wizard:  1 Life,  0 Strength, 2 Gold Coins")
     
     choice = input("\nEnter your choice: ")
     
@@ -201,8 +202,8 @@ def chooseClass(player):
         player.cls = "Trader"
 
     if choice == "4":
-        player.lives = 2
-        player.str = 2
+        player.lives = 1
+        player.str = 0
         player.gold = 2
         player.cls = "Wizard"
    
@@ -216,15 +217,46 @@ def shop(area, player):
 
 def mystic(player):
     return
+
         
 def obeliskInspect(player):
-    if player.cls == "Wizard":
+    if player.cls != "Wizard":
         print("You walk up to the obelisk and see an inscribed message:")
-        print("Place a gold coin on thee, and magic powers you will see...")
+        print("!¡ꖎᔑᓵᒷ ᔑ ⊣𝙹ꖎ↸ coin 𝙹リ thee, ᔑリ↸ ᒲᔑ⊣╎ᓵ powers ||𝙹⚍ ∴╎ꖎꖎ ᓭᒷᒷ")
+        return
+    
+    if player.obeliskUses > 7:
+        print("The obelisk is drained of power...")
         return
     
     print("You walk up to the obelisk and see an inscribed message:")
-    print("!¡ꖎᔑᓵᒷ ᔑ ⊣𝙹ꖎ↸ coin 𝙹リ thee, ᔑリ↸ ᒲᔑ⊣╎ᓵ powers ||𝙹⚍ ∴╎ꖎꖎ ᓭᒷᒷ")
+    print("Place a gold coin on thee, and magic powers you will see...")
+    
+    if player.gold < 1:
+        return
+    
+    player.gold += -1
+    player.obeliskUses += 1
+    if random.randint(0,1) == 0:
+        print("\nYou sacrificed 1 gold coin in return for 1 strength.")
+        player.str += 1
+    else:
+        print("\nYou sacrificed 1 gold coin in return for 1 extra life.")
+        player.lives += 1
+        player.maxLives += 1
+
+    
+def dice(player, small, big, better = "none"):
+    if (player.cls != "Wizard") or (random.randint(0,1) == 0):
+        return random.randint(small, big)
+    
+    a = random.randint(small, big)
+    b = random.randint(small, big)
+    
+    if better == "high": return max([a,b])
+    if better == "low": return min([a,b])
+    return a
+
 
 def main(player):
     #CREATE AREAS
@@ -279,6 +311,7 @@ def main(player):
     
     #PRE-GAME
     chooseClass(player)
+    forest.entities.append(goblin)    
 
     #MAIN LOOP
     while True:
@@ -329,8 +362,7 @@ def main(player):
             obeliskInspect(player)
             
         if player.lives <= 0:
-            clear()
-            print("You have run out of lives! \nGame over... \n")
+            print("\nYou have run out of lives! \nGame over... \n")
             break
             
         input("\nPress enter to continue...")
