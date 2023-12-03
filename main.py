@@ -26,9 +26,10 @@ class Entity:
         self.gold = gold
         
 class Item:
-    def __init__(self, name, desc = ""):
+    def __init__(self, name, desc = "", str = 0):
         self.name = name
         self.desc = desc
+        self.str = str
  
 
 #SETUP FUNCTIONS
@@ -163,6 +164,13 @@ def viewStats(player):
     for item in player.inventory:
         print(f"{item.name}: {item.desc}")
         return
+    
+
+def tavern(player):
+    return
+
+def mystic(player):
+    return
         
 
 def main(player):
@@ -206,6 +214,7 @@ def main(player):
 
     #CREATE ENTITIES
     goblin =    Entity("Goblin", 3, 2)
+    golem =     Entity("Golem",  6, 4)
     
     #CREATE ITEMS
     stick =     Item("Stick")
@@ -215,10 +224,7 @@ def main(player):
     #SETUP VARIABLES
     area = forest
     
-    forest.entities.append(goblin)
-    
     #MAIN LOOP
-
     while True:
         
         choices = ["View stats", "Travel to another area"]
@@ -250,6 +256,12 @@ def main(player):
         if choice == "Fight a monster":
             clear()
             chooseMonster(area, player)
+            
+        if choice == "Visit the tavern":
+            tavern(player)            
+
+        if choice == "Visit the mystic":
+            mystic(player)
             
         input("\nPress enter to continue...")
         clear()
