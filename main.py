@@ -89,10 +89,12 @@ def listBorderAreas(area):
 def chooseMonster(area, player):
     monsters = area.entities
     i = 2
+    print(f"You have {player.str} Strength and {player.lives} Lives Remaining.\n")
     print("Monsters to fight:")
     print("1 - Cancel fight")
     for monster in monsters:
         print(f"{i} - {monster.name}: Has {monster.str} Strength, Carrying {monster.gold} Gold Coins")
+        i += 1
         
     choice = input("\nEnter your choice: ")
     
@@ -107,6 +109,7 @@ def chooseMonster(area, player):
         clear()
         fight(area, player, monsters[int(choice)-2])
         return
+    
 
 def clear():
     os.system('cls||clear')
@@ -308,6 +311,7 @@ def main(player):
     
     #SETUP VARIABLES
     area = forest
+    randomMonsters = [goblin]
     
     #PRE-GAME
     chooseClass(player)
@@ -316,6 +320,14 @@ def main(player):
     #MAIN LOOP
     while True:
         
+        if random.randint(0,5) == 0:
+            monster = random.choice(randomMonsters)
+            print(f"You have been attacked by a {monster.name}!\n")
+            input("Press enter to continue...")
+            clear()
+            area.entities.append(monster)
+            fight(area, player, random.choice(randomMonsters))
+
         choices = ["View stats", "Travel to another area"]
         print(f"You are currently in {area.name}: {area.desc}.\n")
         
