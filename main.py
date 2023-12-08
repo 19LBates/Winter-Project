@@ -240,7 +240,16 @@ def shop(items, player, name = "shop"):
         
 
 def mystic(player):
-    return
+    roll = dice(player, 1, 6, "high")
+    if roll == 1:
+        player.lives += -1
+        print("The mystic blundered, and you lost a life!")
+    elif roll == 2:
+        player.gold += -1
+        print("The mystic blundered, and you lost a gold coin!")
+    elif roll == 3:
+        print("Nothing happened")
+
 
         
 def obeliskInspect(player):
