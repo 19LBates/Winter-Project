@@ -28,10 +28,11 @@ class Entity:
         self.gold = gold
         
 class Item:
-    def __init__(self, name, desc = "", str = 0):
+    def __init__(self, name, desc = "", str = 0, cost = 0):
         self.name = name
         self.desc = desc
         self.str = str
+        self.cost = cost
  
 
 #SETUP FUNCTIONS
@@ -214,9 +215,29 @@ def chooseClass(player):
     clear()
 
 
-def shop(area, player):
-    return
-
+def shop(items, player, name = "shop"):
+    print(f"1 - Leave the {name}")
+    i = 2
+    for item in items:
+        print(f"{i} - {item.name}: {item.desc} - Costs {item.cost} Gold")
+    
+    choice = input("\nEnter your choice: ")
+    if choice == "1": return
+    try:
+        item = items[int(choice)-2]
+    except:
+        clear()
+        print("Invalid input. Please try again. \n")
+        return shop(items, player)
+    else: 
+        if player.gold < item.cost:
+            print("\nYou are too poor to buy this item!")
+            return
+        
+        player.gold -= item.cost
+        player.inventory.append(item)
+        player.str += item.str
+        
 
 def mystic(player):
     return
@@ -259,6 +280,14 @@ def dice(player, small, big, better = "none"):
     if better == "high": return max([a,b])
     if better == "low": return min([a,b])
     return a
+
+
+def win(player):
+    while True:
+        clear()
+        print("Congratulations! \nYou were able to reach to reach the portal, allowing you to return the land to peace once again...")
+        viewStats(player)
+        input()
 
 
 def main(player):
@@ -337,7 +366,7 @@ def main(player):
     
     #CREATE ITEMS
     stick =     Item("Stick")
-    sword =     Item("Sword")
+    sword =     Item("Sword", "A gleaming, steel sword", 2, 4)
     stone =     Item("Stone")
     
     #SETUP VARIABLES
@@ -356,7 +385,7 @@ def main(player):
             input("Press enter to continue...")
             clear()
             area.entities.append(monster)
-            fight(area, player, random.choice(randomMonsters))
+            fight(area, player, monster)
 
         choices = ["View stats", "Travel to another area"]
         print(f"You are currently in {area.name}: {area.desc}.\n")
@@ -393,7 +422,7 @@ def main(player):
             
         if choice == "Visit the tavern":
             clear()
-            shop(village, player)            
+            shop([sword], player, "tavern")            
 
         if choice == "Visit the mystic":
             clear()
