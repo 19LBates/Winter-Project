@@ -6,4 +6,4 @@ Updated: 8 December 2023
 Made by: Lucas Bates 
 
 ## Game Map
-(mp.png)
+![A map of the game](mp.png)
