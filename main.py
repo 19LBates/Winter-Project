@@ -302,7 +302,38 @@ def main(player):
 
     #CREATE ENTITIES
     goblin =    Entity("Goblin", 3, 2)
+    spider =    Entity("Spider", 2, 0)
+    bear =      Entity("Bear", 4, 0)
     golem =     Entity("Golem",  6, 4)
+    mummy =     Entity("Ancient Mummy", 3, 3)
+    shark =     Entity("Shark", 7, 4)
+    piranha =   Entity("Piranha", 3, 2)
+    skeleton =  Entity("Reanimated Skeleton", 3, 3)
+
+    forest.entities =   [goblin, bear]
+    plainsW.entities =  []
+    village.entities =  []
+    savanna.entities =  []
+    desert.entities =   [mummy]
+    mountain.entities = [golem]
+    hut.entities =      []
+    hillsNW.entities =  []
+    plainsN.entities =  []
+    desertN.entities =  []
+    hillsNE.entities =  []
+    valleyN.entities =  []
+    pond.entities =     [piranha]
+    valleyE.entities =  []
+    ruins.entities =    [skeleton]
+    plainsE.entities =  []
+    graves.entities =   [skeleton, skeleton]
+    church.entities =   []
+    cityE.entities =    []
+    cityW.entities =    []
+    hillsS.entities =   []
+    valleyS.entities =  []
+    lake.entities =     [shark]  
+    obelisk.entities =  []
     
     #CREATE ITEMS
     stick =     Item("Stick")
@@ -311,11 +342,10 @@ def main(player):
     
     #SETUP VARIABLES
     area = forest
-    randomMonsters = [goblin]
+    randomMonsters = [goblin, spider]
     
     #PRE-GAME
     chooseClass(player)
-    forest.entities.append(goblin)    
 
     #MAIN LOOP
     while True:
