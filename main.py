@@ -220,6 +220,7 @@ def shop(items, player, name = "shop"):
     i = 2
     for item in items:
         print(f"{i} - {item.name}: {item.desc} - Costs {item.cost} Gold")
+        i += 1
     
     choice = input("\nEnter your choice: ")
     if choice == "1": return
@@ -236,6 +237,7 @@ def shop(items, player, name = "shop"):
         
         player.gold -= item.cost
         player.inventory.append(item)
+        items.remove(item)
         player.str += item.str
         
 
@@ -294,9 +296,26 @@ def dice(player, small, big, better = "none"):
 def win(player):
     while True:
         clear()
-        print("Congratulations! \nYou were able to reach to reach the portal, allowing you to return the land to peace once again...")
+        print("Congratulations! \nYou were able to reach to reach the portal, allowing you to return the land to peace once again...\n\n")
         viewStats(player)
         input()
+
+
+def drink(player, potion):
+    if potion.name == "Health Potion":
+        if player.lives >= player.maxLives:
+            player.lives += 1
+        else:
+            player.lives += 2
+        print(f"You now have {player.lives} lives.")
+    
+    if potion.name == "Strength Potion":
+        player.str += 2
+        print(f"You now have {player.str} Strength.")
+        
+    player.inventory.remove(potion)
+    return
+
 
 
 def main(player):
@@ -358,7 +377,7 @@ def main(player):
     hillsNW.entities =  []
     plainsN.entities =  []
     desertN.entities =  []
-    hillsNE.entities =  []
+    hillsNE.entities =  [golem]
     valleyN.entities =  []
     pond.entities =     [piranha]
     valleyE.entities =  []
@@ -374,9 +393,10 @@ def main(player):
     obelisk.entities =  []
     
     #CREATE ITEMS
-    stick =     Item("Stick")
-    sword =     Item("Sword", "A gleaming, steel sword", 2, 4)
-    stone =     Item("Stone")
+    pot_hp =    Item("Health Potion", "A small vile of glowing, pink liquid.", 0, 2)
+    pot_str =   Item("Strength Potion", "A small vile of deep, crimson liquid.", 0, 2)
+    sword =     Item("Sword", "A gleaming, steel sword.", 2, 4)
+    portalKey = Item("Portal Key", "A mysterious key, that faintly glows purple in the dark.", 0, 10)
     
     #SETUP VARIABLES
     area = forest
@@ -384,9 +404,14 @@ def main(player):
     
     #PRE-GAME
     chooseClass(player)
+    tavernItems = [pot_hp, pot_str, sword, portalKey]
+    marketItems = [pot_hp, pot_hp, pot_str, pot_str, sword, portalKey]
 
     #MAIN LOOP
     while True:
+
+        if (portalKey in player.inventory) and not (portal in gate.borderAreas):
+            gate.borderAreas.append(portal)
         
         if random.randint(0,5) == 0:
             monster = random.choice(randomMonsters)
@@ -399,6 +424,9 @@ def main(player):
         choices = ["View stats", "Travel to another area"]
         print(f"You are currently in {area.name}: {area.desc}.\n")
         
+        if pot_hp in player.inventory: choices.append("Drink your Health Potion")
+        if pot_str in player.inventory: choices.append("Drink your Strength Potion")
+
         if len(area.entities) == 1:
             choices.append("Fight a monster")
             print(f"There is a monster in this area.\n")
@@ -410,9 +438,11 @@ def main(player):
         if area == village:
             choices.append("Visit the tavern")
             choices.append("Visit the mystic")
+
+        if area == cityE: choices.append("Visit the mystic")
+        if area == cityW: choices.append("Visit the market")
             
-        if area == obelisk:
-            choices.append("Inspect the obelisk")
+        if area == obelisk: choices.append("Inspect the obelisk")
 
         print("Choose what to do:")
         choice = mainChoice(choices)
@@ -422,8 +452,11 @@ def main(player):
             viewStats(player)
  
         if choice == "Travel to another area":
-            clear()
-            area = travel(area)
+            for x in range (dice(player, 1, 3, "high")):
+                clear()
+                area = travel(area)
+                if area == portal:
+                    win(player)
        
         if choice == "Fight a monster":
             clear()
@@ -431,7 +464,11 @@ def main(player):
             
         if choice == "Visit the tavern":
             clear()
-            shop([sword], player, "tavern")            
+            shop(tavernItems, player, "tavern")        
+
+        if choice == "Visit the market":
+            clear()
+            shop(marketItems, player, "market")   
 
         if choice == "Visit the mystic":
             clear()
@@ -440,6 +477,14 @@ def main(player):
         if choice == "Inspect the obelisk":
             clear()
             obeliskInspect(player)
+
+        if choice == "Drink your Health Potion":
+            clear()
+            drink(player, pot_hp)
+
+        if choice == "Drink your Strength Potion":
+            clear()
+            drink(player, pot_str)
             
         if player.lives <= 0:
             print("\nYou have run out of lives! \nGame over... \n")
