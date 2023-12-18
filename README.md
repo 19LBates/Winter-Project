@@ -1,7 +1,7 @@
 # Winter-Project
 
 ## Project Info
-Version: 1.0   
+Version: Beta 1.1  
 Updated: 15 December 2023  
 Made by: Lucas Bates 
 

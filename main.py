@@ -239,19 +239,28 @@ def shop(items, player, name = "shop"):
         player.inventory.append(item)
         items.remove(item)
         player.str += item.str
+        print(f"\nYou bought a {item.name} for {item.cost} Gold coins. \nYou have {player.gold} Gold coins remaining.")
         
 
 def mystic(player):
     roll = dice(player, 1, 6, "high")
     if roll == 1:
         player.lives += -1
-        print("The mystic blundered, and you lost a life!")
+        print(f"The mystic blundered, and you lost a life! \nYou have {player.lives} lives remaining.")
     elif roll == 2:
         player.gold += -1
-        print("The mystic blundered, and you lost a gold coin!")
+        print(f"The mystic blundered, and you lost a gold coin! \nYou now have {player.gold} gold coins.")
     elif roll == 3:
         print("Nothing happened")
-
+    elif roll == 4:
+        player.gold += 1
+        print(f"Golden dust appears before you, and materialises into a golden coin! \nYou now have {player.gold} gold coins.")
+    elif roll == 5:
+        player.str += 1
+        print(f"You feel strength coursing through your veins. \nYou now have {player.str} strength.")
+    elif roll == 6:
+        player.lives += 1
+        print(f"You feel a wave of rejuvination wash over you. \nYou now have {player.lives} lives.")
 
         
 def obeliskInspect(player):
@@ -310,7 +319,7 @@ def drink(player, potion):
         print(f"You now have {player.lives} lives.")
     
     if potion.name == "Strength Potion":
-        player.str += 2
+        player.str += 1
         print(f"You now have {player.str} Strength.")
         
     player.inventory.remove(potion)
@@ -331,9 +340,9 @@ def main(player):
     plainsN =   Area("The Northern Grassland", "a stretch of flat, grass-filled land")
     desertN =   Area("The Frozen Desert", "a large, deserted area, filled with snow and ice")
     hillsNE =   Area("Some Hills", "a stretch of hilly grassland")
-    valleyN =   Area("The Valley", "an area surrounded by many hills")
+    valleyN =   Area("The Northern Valley", "an area surrounded by many hills")
     pond =      Area("The Pond", "a small pond, home to a few ducks")
-    valleyE =   Area("The Valley", "an area surrounded by many hills")
+    valleyE =   Area("The Eastern Valley", "an area surrounded by many hills")
     ruins =     Area("The Ruins", "the remnants of a great castle that stood here almost a thousand years ago")
     plainsE =   Area("The Eastern Grassland", "a stretch of flat, grass-filled land")
     graves =    Area("The Graveyard", "a fenced-off area, with the graves of many dead souls")
@@ -420,6 +429,10 @@ def main(player):
             clear()
             area.entities.append(monster)
             fight(area, player, monster)
+        
+        if player.lives <= 0:
+            print("\nYou have run out of lives! \nGame over... \n")
+            break
 
         choices = ["View stats", "Travel to another area"]
         print(f"You are currently in {area.name}: {area.desc}.\n")
