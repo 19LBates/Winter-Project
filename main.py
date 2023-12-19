@@ -427,6 +427,9 @@ def main(player):
     randomMonsters = [goblin, spider]
     
     #PRE-GAME
+    clear()
+    print("You find yourself in a corrupted world, overrun by monsters. \nTo restore peace to the world, you must acquire the artifact of power. \nTo find the artifact, you must travel through the swirling portal, which is guarded by an indestructable gate.")
+    input("\nPress enter to begin...") ; clear()
     chooseClass(player)
     tavernItems = [pot_hp, pot_str, sword, portalKey]
     marketItems = [pot_hp, pot_hp, pot_str, pot_str, sword, portalKey]
