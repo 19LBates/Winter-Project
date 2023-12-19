@@ -12,6 +12,7 @@ class Player:
         self.gold = 0
         self.cls = ""
         self.obeliskUses = 0
+        self.turnsSinceMystic = 100
         
 class Area:
     def __init__(self, name, desc = ""):
@@ -56,28 +57,41 @@ def createBorderAreas(areas):
         cur += 1
        
 
-def travel(curArea):
+def travel(startArea, travels):
+    curArea = startArea
+
+    for x in range(travels):
+        newArea = travelOne(curArea)
+        if newArea == "REMAIN": break
+        curArea = newArea
+        clear()
+    clear()
+
+    if startArea == curArea:
+        print(f"You have remained in the {startArea.name}")
+        return startArea
+
+    print(f"You have travelled from the {startArea.name} to the {curArea.name}")
+    return curArea
+
+
+def travelOne(curArea):
+    clear()
     listBorderAreas(curArea)
     areaList = curArea.borderAreas
     choice = input("\nEnter your choice: ")
     
-    if choice == "1":
-        clear()
-        print(f"You have stayed in {curArea.name}.")
-        return curArea
+    if choice == "1": return "REMAIN"
     
     try:
         newArea = areaList[int(choice)-2]
     except:
-        clear()
         print("Invalid input. Please try again. \n")
-        return travel(curArea)
+        return travelOne(curArea)
     else:
-        clear()
-        print(f"You have travelled from {curArea.name} to {newArea.name}.")
         return newArea
-        
     
+
 def listBorderAreas(area):
     areaList = area.borderAreas  
     print(f"1 - Remain in {area.name}")
@@ -244,6 +258,7 @@ def shop(items, player, name = "shop"):
 
 def mystic(player):
     roll = dice(player, 1, 6, "high")
+    player.turnsSinceMystic = 0
     if roll == 1:
         player.lives += -1
         print(f"The mystic blundered, and you lost a life! \nYou have {player.lives} lives remaining.")
@@ -412,6 +427,9 @@ def main(player):
     randomMonsters = [goblin, spider]
     
     #PRE-GAME
+    clear()
+    print("You find yourself in a corrupted world, overrun by monsters. \nTo restore peace to the world, you must acquire the artifact of power. \nTo find the artifact, you must travel through the swirling portal, which is guarded by an indestructable gate.")
+    input("\nPress enter to begin...") ; clear()
     chooseClass(player)
     tavernItems = [pot_hp, pot_str, sword, portalKey]
     marketItems = [pot_hp, pot_hp, pot_str, pot_str, sword, portalKey]
@@ -448,9 +466,9 @@ def main(player):
             choices.append("Fight a monster")
             print(f"There are {len(area.entities)} monsters in this area.\n")
             
-        if area == village:
-            choices.append("Visit the tavern")
-            choices.append("Visit the mystic")
+        if area == village: choices.append("Visit the tavern")
+        
+        if (area == village) and (player.turnsSinceMystic >= 4): choices.append("Visit the mystic")
 
         if area == cityE: choices.append("Visit the mystic")
         if area == cityW: choices.append("Visit the market")
@@ -463,13 +481,13 @@ def main(player):
         if choice == "View stats":
             clear()
             viewStats(player)
+            player.turnsSinceMystic += -1
  
         if choice == "Travel to another area":
-            for x in range (dice(player, 1, 3, "high")):
-                clear()
-                area = travel(area)
-                if area == portal:
-                    win(player)
+            clear()
+            area = travel(area, random.randint(1, 3))
+            if area == portal:
+                win(player)
        
         if choice == "Fight a monster":
             clear()
@@ -504,6 +522,7 @@ def main(player):
             break
             
         input("\nPress enter to continue...")
+        player.turnsSinceMystic += 1
         clear()
                 
     
