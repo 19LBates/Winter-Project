@@ -37,6 +37,16 @@ class Item:
  
 
 #SETUP FUNCTIONS
+def numStr(singular, plural, num):
+    if num == 1:
+        return (f"1 {singular}")
+    
+    if plural == "s":
+        return (f"{num} {singular}s")
+    
+    return (f"{num} {plural}")
+
+
 def createBorderAreas(areas):
     cur = 0
     
@@ -104,11 +114,11 @@ def listBorderAreas(area):
 def chooseMonster(area, player):
     monsters = area.entities
     i = 2
-    print(f"You have {player.str} Strength and {player.lives} Lives Remaining.\n")
+    print(f"You have {player.str} Strength and {numStr("Life", "Lives", player.lives)} Remaining.\n")
     print("Monsters to fight:")
     print("1 - Cancel fight")
     for monster in monsters:
-        print(f"{i} - {monster.name}: Has {monster.str} Strength, Carrying {monster.gold} Gold Coins")
+        print(f"{i} - {monster.name}: Has {monster.str} Strength, Carrying {numStr("Gold Coin", "s", monster.gold)}")
         i += 1
         
     choice = input("\nEnter your choice: ")
@@ -160,7 +170,7 @@ def fight(area, player, monster):
         area.entities.remove(monster)
         print(f"\nYou defeated the {monster.name}!")
         player.gold += monster.gold
-        print(f"You got {monster.gold} gold coins from the monster. You now have {player.gold} gold coins.")
+        print(f"You got {numStr("gold coin", "s", monster.gold)} from the monster. You now have {numStr("gold coin", "s", player.gold)}.")
         return
     
     if monsterFinalStr > playerFinalStr:
@@ -230,7 +240,8 @@ def chooseClass(player):
 
 
 def shop(items, player, name = "shop"):
-    print(f"1 - Leave the {name}")
+    print(f"Welcome to the {name}! You have {numStr("gold coin", "s", player.gold)} to spend.")
+    print(f"\n1 - Leave the {name}")
     i = 2
     for item in items:
         print(f"{i} - {item.name}: {item.desc} - Costs {item.cost} Gold")
@@ -257,8 +268,20 @@ def shop(items, player, name = "shop"):
         
 
 def mystic(player):
+    print("Welcome to the Mystic! Here, anything can happen, good or bad!\n")
+    print("1 - Leave the Mystic")
+    print("2 - Allow the Mystic to use her magic")
+    
+    choice = input("\nEnter your choice: ")
+    if choice == "1": return
+    if choice not in ["1", "2"]:
+        clear()
+        print("Invalid input. Please try again. \n")
+        return mystic(player)
+    
     roll = dice(player, 1, 6, "high")
     player.turnsSinceMystic = 0
+    print()
     if roll == 1:
         player.lives += -1
         print(f"The mystic blundered, and you lost a life! \nYou have {player.lives} lives remaining.")
