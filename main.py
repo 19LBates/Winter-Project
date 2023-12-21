@@ -37,6 +37,16 @@ class Item:
  
 
 #SETUP FUNCTIONS
+def numStr(singular, plural, num):
+    if num == 1:
+        return (f"1 {singular}")
+    
+    if plural == "s":
+        return (f"{num} {singular}s")
+    
+    return (f"{num} {plural}")
+
+
 def createBorderAreas(areas):
     cur = 0
     
@@ -104,11 +114,11 @@ def listBorderAreas(area):
 def chooseMonster(area, player):
     monsters = area.entities
     i = 2
-    print(f"You have {player.str} Strength and {player.lives} Lives Remaining.\n")
+    print(f"You have {player.str} Strength and {numStr("Life", "Lives", player.lives)} Remaining.\n")
     print("Monsters to fight:")
     print("1 - Cancel fight")
     for monster in monsters:
-        print(f"{i} - {monster.name}: Has {monster.str} Strength, Carrying {monster.gold} Gold Coins")
+        print(f"{i} - {monster.name}: Has {monster.str} Strength, Carrying {numStr("Gold Coin", "s", monster.gold)}")
         i += 1
         
     choice = input("\nEnter your choice: ")
@@ -160,12 +170,12 @@ def fight(area, player, monster):
         area.entities.remove(monster)
         print(f"\nYou defeated the {monster.name}!")
         player.gold += monster.gold
-        print(f"You got {monster.gold} gold coins from the monster. You now have {player.gold} gold coins.")
+        print(f"You got {numStr("gold coin", "s", monster.gold)} from the monster. You now have {numStr("gold coin", "s", player.gold)}.")
         return
     
     if monsterFinalStr > playerFinalStr:
         player.lives += -1
-        print(f"\nThe {monster.name} overpowered you! You have {player.lives} lives remaining.")
+        print(f"\nThe {monster.name} overpowered you! You have {numStr("Life", "Lives", player.lives)} remaining.")
         return
     
     print(f"\nYou and the {monster.name} bought each other to a draw.")
@@ -230,7 +240,8 @@ def chooseClass(player):
 
 
 def shop(items, player, name = "shop"):
-    print(f"1 - Leave the {name}")
+    print(f"Welcome to the {name}! You have {numStr("gold coin", "s", player.gold)} to spend.")
+    print(f"\n1 - Leave the {name}")
     i = 2
     for item in items:
         print(f"{i} - {item.name}: {item.desc} - Costs {item.cost} Gold")
@@ -253,29 +264,41 @@ def shop(items, player, name = "shop"):
         player.inventory.append(item)
         items.remove(item)
         player.str += item.str
-        print(f"\nYou bought a {item.name} for {item.cost} Gold coins. \nYou have {player.gold} Gold coins remaining.")
+        print(f"\nYou bought a {item.name} for {numStr("gold coin", "s", item.cost)}. \nYou have {numStr("gold coin", "s", player.gold)} remaining.")
         
 
 def mystic(player):
+    print("Welcome to the Mystic! Here, anything can happen, good or bad!\n")
+    print("1 - Leave the Mystic")
+    print("2 - Allow the Mystic to use her magic")
+    
+    choice = input("\nEnter your choice: ")
+    if choice == "1": return
+    if choice not in ["1", "2"]:
+        clear()
+        print("Invalid input. Please try again. \n")
+        return mystic(player)
+    
     roll = dice(player, 1, 6, "high")
     player.turnsSinceMystic = 0
+    print()
     if roll == 1:
         player.lives += -1
-        print(f"The mystic blundered, and you lost a life! \nYou have {player.lives} lives remaining.")
+        print(f"The mystic blundered, and you lost a life! \nYou have {numStr("life","lives",player.lives)} remaining.")
     elif roll == 2:
         player.gold += -1
-        print(f"The mystic blundered, and you lost a gold coin! \nYou now have {player.gold} gold coins.")
+        print(f"The mystic blundered, and you lost a gold coin! \nYou now have {numStr("gold coin", "s", player.gold)}.")
     elif roll == 3:
         print("Nothing happened")
     elif roll == 4:
         player.gold += 1
-        print(f"Golden dust appears before you, and materialises into a golden coin! \nYou now have {player.gold} gold coins.")
+        print(f"Golden dust appears before you, and materialises into a golden coin! \nYou now have {numStr("gold coin", "s", player.gold)}.")
     elif roll == 5:
         player.str += 1
         print(f"You feel strength coursing through your veins. \nYou now have {player.str} strength.")
     elif roll == 6:
         player.lives += 1
-        print(f"You feel a wave of rejuvination wash over you. \nYou now have {player.lives} lives.")
+        print(f"You feel a wave of rejuvination wash over you. \nYou now have {numStr("Life", "Lives", player.lives)}.")
 
         
 def obeliskInspect(player):
@@ -331,7 +354,7 @@ def drink(player, potion):
             player.lives += 1
         else:
             player.lives += 2
-        print(f"You now have {player.lives} lives.")
+        print(f"You now have {numStr("Life", "Lives", player.lives)}.")
     
     if potion.name == "Strength Potion":
         player.str += 1
