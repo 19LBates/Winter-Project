@@ -1,5 +1,6 @@
 ﻿#IMPORT MODULES
 import os
+from pydoc import ErrorDuringImport
 import random
 
 #SETUP CLASSES
@@ -201,7 +202,7 @@ def chooseClass(player):
     print("Pick one of the following classes:")
     print("1 - Beserk:  3 Lives, 5 Strength, 1 Gold Coin")
     print("2 - Tank:    5 Lives, 3 Strength, 1 Gold Coin")
-    print("3 - Trader:  3 Lives, 3 Strength, 4 Gold Coins")
+    print("3 - Trader:  3 Lives, 3 Strength, 5 Gold Coins")
     print("4 - Wizard:  1 Life,  0 Strength, 2 Gold Coins")
     
     choice = input("\nEnter your choice: ")
@@ -226,7 +227,7 @@ def chooseClass(player):
     if choice == "3":
         player.lives = 3
         player.str = 3
-        player.gold = 4
+        player.gold = 5
         player.cls = "Trader"
 
     if choice == "4":
@@ -395,12 +396,12 @@ def main(player):
     createBorderAreas([forest, plainsW, village, savanna, desert, mountain, hut, hillsNW, plainsN, desertN, hillsNE, valleyN, 
                        pond, valleyE, ruins, plainsE, graves, church, cityE, cityW, hillsS, valleyS, lake, obelisk])
 
-    eeriePlains = Area("The Eerie Grassland", "a stretch of grassland, with eerie mists falling to the ground")
+    eeriePlains = Area("The Eerie Grassland", "a stretch of grassland, with eerie mists falling to the ground. \nA massive beast blocks your way forward.")
     gate = Area("The Portal Gate", "a large, stone gate that prevents you from progressing further")
     portal = Area("The Swirling Portal", "a swirling, screaming portal")
 
     desertN.borderAreas.append(eeriePlains)
-    eeriePlains.borderAreas = [desertN, gate]
+    eeriePlains.borderAreas = [desertN] #ADD GATE LATER AS AN ACTION (WHEN GUARDIAN IS DEFEATED)
     gate.borderAreas = [eeriePlains] #ADD PORTAL LATER AS AN ACTION (USING A KEY)
     portal.borderAreas = [gate]
 
@@ -413,6 +414,7 @@ def main(player):
     shark =     Entity("Shark", 7, 4)
     piranha =   Entity("Piranha", 3, 2)
     skeleton =  Entity("Reanimated Skeleton", 3, 3)
+    guardian =  Entity("Portal Guardian", 8, 0)
 
     forest.entities =   [goblin, bear]
     plainsW.entities =  []
@@ -438,6 +440,7 @@ def main(player):
     valleyS.entities =  []
     lake.entities =     [shark]  
     obelisk.entities =  []
+    eeriePlains.entities = [guardian]
     
     #CREATE ITEMS
     pot_hp =    Item("Health Potion", "A small vile of glowing, pink liquid.", 0, 2)
@@ -451,7 +454,7 @@ def main(player):
     
     #PRE-GAME
     clear()
-    print("You find yourself in a corrupted world, overrun by monsters. \nTo restore peace to the world, you must acquire the artifact of power. \nTo find the artifact, you must travel through the swirling portal, which is guarded by an indestructable gate.")
+    print("You find yourself in a corrupted world, overrun by monsters. \nTo restore peace to the world, you must travel through the swirling portal, \nwhich is guarded by a massive beast and an indestructible gate.")
     input("\nPress enter to begin...") ; clear()
     chooseClass(player)
     tavernItems = [pot_hp, pot_str, sword, portalKey]
@@ -462,6 +465,10 @@ def main(player):
 
         if (portalKey in player.inventory) and not (portal in gate.borderAreas):
             gate.borderAreas.append(portal)
+            
+        if not (guardian in eeriePlains.entities) and not (gate in eeriePlains.borderAreas):
+            eeriePlains.borderAreas.append(gate)
+            eeriePlains.desc = "a stretch of grassland, with eerie mists falling to the ground."
         
         if random.randint(0,5) == 0:
             monster = random.choice(randomMonsters)
