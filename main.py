@@ -34,6 +34,30 @@ class Item:
         self.desc = desc
         self.str = str
         self.cost = cost
+
+class col: #Allows formatting of text
+    w = '\033[0m'
+    bold = '\033[01m'
+    disable = '\033[02m'
+    underline = '\033[04m'
+    reverse = '\033[07m'
+    strikethrough = '\033[09m'
+    invisible = '\033[08m'
+    black = '\033[30m'
+    red = '\033[31m'
+    darkgreen = '\033[32m'
+    orange = '\033[33m'
+    blue = '\033[34m'
+    purple = '\033[35m'
+    cyan = '\033[36m'
+    s = '\033[37m'
+    darkgrey = '\033[90m'
+    r = '\033[91m'
+    g = '\033[92m'
+    y = '\033[93m'
+    lightblue = '\033[94m'
+    pink = '\033[95m'
+    lightcyan = '\033[96m'
  
 
 #SETUP FUNCTIONS
@@ -78,10 +102,10 @@ def travel(startArea, travels):
     clear()
 
     if startArea == curArea:
-        print(f"You have remained in the {startArea.name}")
+        print(f"You have {col.w}remained{col.s} in the {col.w}{startArea.name}{col.s}.")
         return startArea
 
-    print(f"You have travelled from the {startArea.name} to the {curArea.name}")
+    print(f"You have {col.w}travelled{col.s} from the {col.w}{startArea.name}{col.s} to the {col.w}{curArea.name}{col.s}.")
     return curArea
 
 
@@ -104,21 +128,21 @@ def travelOne(curArea):
 
 def listBorderAreas(area):
     areaList = area.borderAreas  
-    print(f"1 - Remain in {area.name}")
+    print(f"{col.s}1 - {col.w}Remain in {area.name}{col.s}")
     i = 2
     for area in areaList:
-        print(f"{i} - Travel to {area.name}")
+        print(f"{col.s}{i} - {col.w}Travel to {area.name}{col.s}")
         i += 1
         
 
 def chooseMonster(area, player):
     monsters = area.entities
     i = 2
-    print(f"You have {player.str} Strength and {numStr('Life', 'Lives', player.lives)} Remaining.\n")
+    print(f"You have {col.w}{player.str} Strength{col.s} and {col.w}{numStr('Life', 'Lives', player.lives)} Remaining{col.s}.\n")
     print("Monsters to fight:")
-    print("1 - Cancel fight")
+    print(f"1 - {col.w}Cancel fight{col.s}")
     for monster in monsters:
-        print(f"{i} - {monster.name}: Has {monster.str} Strength, Carrying {numStr('Gold Coin', 's', monster.gold)}")
+        print(f"{i} - {col.r}{monster.name}{col.s}: Has {monster.str} Strength, Carrying {numStr('Gold Coin', 's', monster.gold)}")
         i += 1
         
     choice = input("\nEnter your choice: ")
@@ -143,7 +167,7 @@ def clear():
 def mainChoice(choices):
     i = 1
     for c in choices:
-        print(f"{i} - {c}")
+        print(f"{i} - {col.w}{c}{col.s}")
         i += 1
 
     choice = input("\nEnter your choice: ")
@@ -163,46 +187,46 @@ def fight(area, player, monster):
     playerFinalStr = player.str + playerDice
     monsterFinalStr = monster.str + monsterDice
 
-    print(f"Your strength is {player.str}, and you rolled a {playerDice}. Your final strength is therefore {playerFinalStr}.")
-    print(f"The {monster.name}'s strength is {monster.str}, and it rolled a {monsterDice}. Its final strength is therefore {monsterFinalStr}.")
+    print(f"{col.w}Your{col.s} strength is {col.w}{player.str}{col.s}, and you rolled a {col.w}{playerDice}{col.s}. Your final strength is therefore {col.w}{playerFinalStr}{col.s}.")
+    print(f"The {col.r}{monster.name}'s{col.s} strength is {col.w}{monster.str}{col.s}, and it rolled a {col.w}{monsterDice}{col.s}. Its final strength is therefore {col.w}{monsterFinalStr}{col.s}.")
 
     if playerFinalStr > monsterFinalStr:
         area.entities.remove(monster)
-        print(f"\nYou defeated the {monster.name}!")
+        print(f"\nYou {col.w}defeated {col.s}the {col.r}{monster.name}{col.w}!")
         player.gold += monster.gold
-        print(f"You got {numStr('gold coin', 's', monster.gold)} from the monster. You now have {numStr('gold coin', 's', player.gold)}.")
+        print(f"You got {col.y}{numStr('gold coin', 's', monster.gold)}{col.s} from the monster. You now have {col.y}{numStr('gold coin', 's', player.gold)}{col.s}.")
         return
     
     if monsterFinalStr > playerFinalStr:
         player.lives += -1
-        print(f"\nThe {monster.name} overpowered you! You have {numStr('Life', 'Lives', player.lives)} remaining.")
+        print(f"\nThe {col.r}{monster.name} {col.w}overpowered{col.s} you! You have {col.g}{numStr('Life', 'Lives', player.lives)}{col.s} remaining.")
         return
     
-    print(f"\nYou and the {monster.name} bought each other to a draw.")
+    print(f"\nYou and the {monster.name} bought each other to a {col.w}draw.{col.s}")
 
 
 def viewStats(player):
-    print(f"Class: {player.cls}\n")
-    print(f"Lives remaining: {player.lives}")
-    print(f"Strength: {player.str}")
-    print(f"Gold coins: {player.gold}")
+    print(f"{col.s}Class: {col.w}{player.cls}\n")
+    print(f"{col.s}Lives remaining: {col.g}{player.lives}")
+    print(f"{col.s}Strength: {col.r}{player.str}")
+    print(f"{col.s}Gold coins: {col.y}{player.gold}")
     
     if len(player.inventory) == 0:
-        print("Inventory: Empty")
+        print(f"{col.s}Inventory: Empty")
         return
 
-    print("\nInventory:")
+    print(f"\n{col.s}Inventory:")
     for item in player.inventory:
-        print(f"{item.name}: {item.desc}")
+        print(f"{col.w}{item.name}: {col.s}{item.desc}")
         return
    
 
 def chooseClass(player):
-    print("Pick one of the following classes:")
-    print("1 - Beserk:  3 Lives, 5 Strength, 1 Gold Coin")
-    print("2 - Tank:    5 Lives, 3 Strength, 1 Gold Coin")
-    print("3 - Trader:  3 Lives, 3 Strength, 5 Gold Coins")
-    print("4 - Wizard:  1 Life,  0 Strength, 2 Gold Coins")
+    print(f"{col.s}Pick one of the following classes:")
+    print(f"{col.s}1 - {col.w}Beserk{col.s}:  3 Lives, 5 Strength, 1 Gold Coin{col.w}")
+    print(f"{col.s}2 - {col.w}Tank{col.s}:    5 Lives, 3 Strength, 1 Gold Coin{col.w}")
+    print(f"{col.s}3 - {col.w}Trader{col.s}:  3 Lives, 3 Strength, 5 Gold Coins{col.w}")
+    print(f"{col.s}4 - {col.w}Wizard{col.s}:  1 Life,  0 Strength, 2 Gold Coins")
     
     choice = input("\nEnter your choice: ")
     
@@ -240,11 +264,11 @@ def chooseClass(player):
 
 
 def shop(items, player, name = "shop"):
-    print(f"Welcome to the {name}! You have {numStr('gold coin', 's', player.gold)} to spend.")
-    print(f"\n1 - Leave the {name}")
+    print(f"Welcome to the {col.w}{name}{col.s}! You have {col.w}{numStr('gold coin', 's', player.gold)}{col.s} to spend.")
+    print(f"\n{col.s}1 - {col.w}Leave the {name}")
     i = 2
     for item in items:
-        print(f"{i} - {item.name}: {item.desc} - Costs {item.cost} Gold")
+        print(f"{col.s}{i} - {col.w}{item.name}{col.s}: {item.desc} - Costs {col.w}{item.cost} Gold{col.s}")
         i += 1
     
     choice = input("\nEnter your choice: ")
@@ -268,9 +292,9 @@ def shop(items, player, name = "shop"):
         
 
 def mystic(player):
-    print("Welcome to the Mystic! Here, anything can happen, good or bad!\n")
-    print("1 - Leave the Mystic")
-    print("2 - Allow the Mystic to use her magic")
+    print(f"{col.s}Welcome to the {col.w}Mystic{col.s}! Here, anything can happen, good or bad!\n")
+    print(f"{col.s}1 - {col.w}Leave the Mystic{col.s}")
+    print(f"{col.s}2 - {col.w}Allow the Mystic to use her magic{col.s}")
     
     choice = input("\nEnter your choice: ")
     if choice == "1": return
@@ -284,21 +308,21 @@ def mystic(player):
     print()
     if roll == 1:
         player.lives += -1
-        print(f"The mystic blundered, and you lost a life! \nYou have {numStr('life','lives',player.lives)} remaining.")
+        print(f"The mystic blundered, and {col.r}you lost a life{col.s}! \nYou have {col.w}{numStr('life','lives',player.lives)}{col.s} remaining.")
     elif roll == 2:
         player.gold += -1
-        print(f"The mystic blundered, and you lost a gold coin! \nYou now have {numStr('gold coin', 's', player.gold)}.")
+        print(f"The mystic blundered, and {col.r}you lost a gold coin{col.s}! \nYou now have {col.w}{numStr('gold coin', 's', player.gold)}{col.s}.")
     elif roll == 3:
-        print("Nothing happened")
+        print("Nothing happened.")
     elif roll == 4:
         player.gold += 1
-        print(f"Golden dust appears before you, and materialises into a golden coin! \nYou now have {numStr('gold coin', 's', player.gold)}.")
+        print(f"{col.y}Golden dust{col.s} appears before you, and materialises into a {col.y}golden coin{col.s}! \nYou now have {numStr('gold coin', 's', player.gold)}{col.s}.")
     elif roll == 5:
         player.str += 1
-        print(f"You feel strength coursing through your veins. \nYou now have {player.str} strength.")
+        print(f"You feel {col.r}strength{col.s} coursing through your veins. \nYou now have {col.w}{player.str} strength{col.s}.")
     elif roll == 6:
         player.lives += 1
-        print(f"You feel a wave of rejuvination wash over you. \nYou now have {numStr('Life', 'Lives', player.lives)}.")
+        print(f"You feel a {col.g}wave of rejuvination{col.s} wash over you{col.s}. \nYou now have {col.w}{numStr('Life', 'Lives', player.lives)}{col.s}.")
 
         
 def obeliskInspect(player):
@@ -452,7 +476,7 @@ def main(player):
     
     #PRE-GAME
     clear()
-    print("You find yourself in a corrupted world, overrun by monsters. \nTo restore peace to the world, you must travel through the swirling portal, \nwhich is guarded by a massive beast and an indestructible gate.")
+    print(f"{col.s}You find yourself in a corrupted world, overrun by monsters. \nTo restore peace to the world, you must travel through the swirling portal, \nwhich is guarded by a massive beast and an indestructible gate.")
     input("\nPress enter to begin...") ; clear()
     chooseClass(player)
     tavernItems = [pot_hp, pot_str, sword, portalKey]
@@ -470,18 +494,18 @@ def main(player):
         
         if random.randint(0,5) == 0:
             monster = random.choice(randomMonsters)
-            print(f"You have been attacked by a {monster.name}!\n")
+            print(f"You have been attacked by a {col.r}{monster.name}{col.s}!\n")
             input("Press enter to continue...")
             clear()
             area.entities.append(monster)
             fight(area, player, monster)
         
         if player.lives <= 0:
-            print("\nYou have run out of lives! \nGame over... \n")
+            print(f"\n{col.w}You have run out of lives! \n{col.r}Game over... \n")
             break
 
         choices = ["View stats", "Travel to another area"]
-        print(f"You are currently in {area.name}: {area.desc}.\n")
+        print(f"You are currently in {col.w}{area.name}{col.s}: {area.desc}.\n")
         
         if pot_hp in player.inventory: choices.append("Drink your Health Potion")
         if pot_str in player.inventory: choices.append("Drink your Strength Potion")
@@ -492,7 +516,7 @@ def main(player):
             
         if len(area.entities) > 1:
             choices.append("Fight a monster")
-            print(f"There are {len(area.entities)} monsters in this area.\n")
+            print(f"There are {col.r}{len(area.entities)} monsters{col.s} in this area.\n")
             
         if area == village: choices.append("Visit the tavern")
         
@@ -549,7 +573,7 @@ def main(player):
             print("\nYou have run out of lives! \nGame over... \n")
             break
             
-        input("\nPress enter to continue...")
+        input(f"\n{col.s}Press enter to continue...")
         player.turnsSinceMystic += 1
         clear()
                 
