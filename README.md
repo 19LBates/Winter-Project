@@ -1,8 +1,8 @@
 # Winter-Project
 
 ## Project Info
-Version: b1.5-a1 
-Updated: 21 December 2023  
+Version: 1.0  
+Updated: 12 January 2024  
 Made by: Lucas Bates 
 
 ## Game Map
