@@ -15,7 +15,7 @@ class Player:
         self.turnsSinceMystic = 100
         
 class Area:
-    def __init__(self, name, desc = ""):
+    def __init__(self, name: str, desc = ""):
         self.name = name
         self.desc = desc
         self.entities = []
@@ -23,13 +23,13 @@ class Area:
         self.borderAreas = []     
   
 class Entity:
-    def __init__(self, name, str, gold = 0):
+    def __init__(self, name: str, str: int, gold = 0):
         self.name = name
         self.str = str
         self.gold = gold
         
 class Item:
-    def __init__(self, name, desc = "", str = 0, cost = 0):
+    def __init__(self, name: str, desc = "", str = 0, cost = 0):
         self.name = name
         self.desc = desc
         self.str = str
@@ -364,14 +364,6 @@ def dice(player, small, big, better = "none"):
     return a
 
 
-def win(player):
-    while True:
-        clear()
-        print("Congratulations! \nYou were able to reach to reach the portal, allowing you to return the land to peace once again...\n\n")
-        viewStats(player)
-        input()
-
-
 def drink(player, potion):
     if potion.name == "Health Potion":
         if player.lives >= player.maxLives:
@@ -421,6 +413,10 @@ def main(player):
     eeriePlains = Area("The Eerie Grassland", "a stretch of grassland, with eerie mists falling to the ground. \nA massive beast blocks your way forward.")
     gate = Area("The Portal Gate", "a large, stone gate that prevents you from progressing further")
     portal = Area("The Swirling Portal", "a swirling, screaming portal")
+
+    temple = Area("The Temple", "a grand temple, with walls of scorching marble")
+    firePlains = Area("Scorched Plains", "a large field of grass that has been reduced to ash")
+    fireSpring = Area("Boiling Spring", "a spring with water that furiously bubbles away")
 
     desertN.borderAreas.append(eeriePlains)
     eeriePlains.borderAreas = [desertN] #ADD GATE LATER AS AN ACTION (WHEN GUARDIAN IS DEFEATED)
@@ -539,7 +535,8 @@ def main(player):
             clear()
             area = travel(area, random.randint(1, 3))
             if area == portal:
-                win(player)
+                print("You travel the the portal, and feel yourself moving at the speed to light, yet also at the pace of a snail. \nAfter what feels like an eternity, but also a split second, you arrive in a world, even weirder than before.")
+                area = temple
        
         if choice == "Fight a monster":
             clear()
