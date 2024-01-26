@@ -535,7 +535,7 @@ def main(player):
             clear()
             area = travel(area, random.randint(1, 3))
             if area == portal:
-                print("You travel the the portal, and feel yourself moving at the speed to light, yet also at the pace of a snail. \nAfter what feels like an eternity, but also a split second, you arrive in a world, even weirder than before.")
+                print("You travel the the portal, and feel yourself moving at the speed of light, yet also at the pace of a snail. \nAfter what feels like an eternity, but also a split second, you arrive in a world, even weirder than before.")
                 area = temple
        
         if choice == "Fight a monster":
@@ -570,7 +570,14 @@ def main(player):
             print("\nYou have run out of lives! \nGame over... \n")
             break
             
-        input(f"\n{col.s}Press enter to continue...")
+        x = input(f"\n{col.s}Press enter to continue...")
+
+
+        #DO NOT COMMIT TO MAIN
+        if x == "CHEAT": area = temple
+        #DO NOT COMMIT TO MAIN
+
+        
         player.turnsSinceMystic += 1
         clear()
                 
