@@ -573,14 +573,12 @@ def main(player):
         x = input(f"\n{col.s}Press enter to continue...")
 
 
-        #DO NOT COMMIT TO MAIN
-        if x == "CHEAT": area = temple
-        #DO NOT COMMIT TO MAIN
+        if (x == "CHEAT") and (os.path.basename(__file__) == "beta.py"): 
+            area = temple
 
-        
+
         player.turnsSinceMystic += 1
-        clear()
-                
+        clear()              
     
  
 #RUN GAME
