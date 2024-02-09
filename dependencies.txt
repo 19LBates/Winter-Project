@@ -1,0 +1,11 @@
+You should have one of the following operating systems to run the game:
+   Windows 10 19H1 or later
+   Windows 11 21H2 or later
+   macOS 10 or later
+   Any recent Linux distribution
+
+You should have one of the following:
+   Python 3.10.0 or later
+   Python 3.9.8 or later
+   Python 3.8.13 or later
+   Python 3.7.14 or later
