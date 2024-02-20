@@ -6,7 +6,7 @@ Updated: 12 January 2024
 Made by: Lucas Bates 
 
 ## Dependencies
-![Dependencies](dependencies.txt)
+Read system & program requirements [here](dependencies.txt)
 
 ## Game Map
 ![A map of the game](map.png)
