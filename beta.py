@@ -414,14 +414,39 @@ def main(player):
     gate = Area("The Portal Gate", "a large, stone gate that prevents you from progressing further")
     portal = Area("The Swirling Portal", "a swirling, screaming portal")
 
-    temple = Area("The Temple", "a grand temple, with walls of scorching marble")
-    firePlains = Area("Scorched Plains", "a large field of grass that has been reduced to ash")
+#    fireForest
+    firePlainsW = Area("Scorched Plains", "a large field of grass that has been reduced to ash")
+    fireVillage = Area("The Village", "a small, medieval village, with no houses left. They are all gone. \nIt's not really a village. It's not really a place")
+#    fireSavanna
+#    fireDesert
+#    fireMountain
+#    fireHut
+#    fireHillsNW
+    firePlainsN = Area("Scorched Plains", "a large field of grass that has been reduced to ash")
+#    fireDesertN
+#    fireHillsNE
+#    fireValleyN
     fireSpring = Area("Boiling Spring", "a spring with water that furiously bubbles away")
+#   fireValleyE
+#    fireRuins
+#    fireGraves
+    fireTemple = Area("The Temple", "a grand temple, with walls of scorching marble")
+#    fireCityE
+#    fireCityW
+#    fireHillsS
+#    fireValleyS
+#    fireLake
+#    fire
+    
+
+    createBorderAreas([firePlainsW, fireVillage, firePlainsN, fireSpring, fireTemple])
 
     desertN.borderAreas.append(eeriePlains)
     eeriePlains.borderAreas = [desertN] #ADD GATE LATER AS AN ACTION (WHEN GUARDIAN IS DEFEATED)
     gate.borderAreas = [eeriePlains] #ADD PORTAL LATER AS AN ACTION (USING A KEY)
     portal.borderAreas = [gate]
+
+    fireTemple
 
     #CREATE ENTITIES
     goblin =    Entity("Goblin", 3, 2)
@@ -536,7 +561,7 @@ def main(player):
             area = travel(area, random.randint(1, 3))
             if area == portal:
                 print("You travel the the portal, and feel yourself moving at the speed of light, yet also at the pace of a snail. \nAfter what feels like an eternity, but also a split second, you arrive in a world, even weirder than before.")
-                area = temple
+                area = fireTemple
        
         if choice == "Fight a monster":
             clear()
@@ -574,7 +599,7 @@ def main(player):
 
 
         if (x == "CHEAT") and (os.path.basename(__file__) == "beta.py"): 
-            area = temple
+            area = fireTemple
 
 
         player.turnsSinceMystic += 1
