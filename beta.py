@@ -414,29 +414,29 @@ def main(player):
     gate = Area("The Portal Gate", "a large, stone gate that prevents you from progressing further")
     portal = Area("The Swirling Portal", "a swirling, screaming portal")
 
-#    fireForest
-    firePlainsW = Area("Scorched Plains", "a large field of grass that has been reduced to ash")
-    fireVillage = Area("The Village", "a small, medieval village, with no houses left. They are all gone. \nIt's not really a village. It's not really a place")
-#    fireSavanna
-#    fireDesert
-#    fireMountain
-#    fireHut
-#    fireHillsNW
-    firePlainsN = Area("Scorched Plains", "a large field of grass that has been reduced to ash")
-#    fireDesertN
+    fireJungle =    Area("The Jungle", "a large, humid jungle with many trees all around you")
+    firePlainsW =   Area("Scorched Plains", "a large field of grass that has been reduced to ash")
+    fireVillage =   Area("The Village", "a small, medieval village, with no houses left. They are all gone. \nIt's not really a village. It's not really a place")
+    fireSavanna =   Area("The Savanna", "a stretch of warm grassland, with melting trees dotted around")
+    fireDesert =    Area("The Desert", "an empty stretch of sand that is somehow cooler than the rest of the world")
+    fireVolcano =   Area("The Volcano", "a massive, magmatic, metal-melting volcano.")
+    fireHut =       Area("The Volcano Hut", "a small hut situated on a flat area of the volcano")
+    fireHillsNW =   Area("The Northern Hills", "a stretch of rocky hills")
+    firePlainsN =   Area("Scorched Plains", "a large field of grass that has been reduced to ash")
+    fireNothing =   Area("Nothing", "There is nothing here. Please ignore")
 #    fireHillsNE
 #    fireValleyN
-    fireSpring = Area("Boiling Spring", "a spring with water that furiously bubbles away")
+    fireSpring =    Area("Boiling Spring", "a spring with water that furiously bubbles away")
 #   fireValleyE
 #    fireRuins
 #    fireGraves
-    fireTemple = Area("The Temple", "a grand temple, with walls of scorching marble")
+    fireTemple =    Area("The Temple", "a grand temple, with walls of scorching marble")
 #    fireCityE
 #    fireCityW
 #    fireHillsS
 #    fireValleyS
 #    fireLake
-#    fire
+#    fireObelisk
     
 
     createBorderAreas([firePlainsW, fireVillage, firePlainsN, fireSpring, fireTemple])
