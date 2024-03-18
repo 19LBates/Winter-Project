@@ -13,6 +13,7 @@ class Player:
         self.cls = ""
         self.obeliskUses = 0
         self.turnsSinceMystic = 100
+        self.potInfo = []
         
 class Area:
     def __init__(self, name: str, desc = ""):
@@ -366,18 +367,29 @@ def dice(player, small, big, better = "none"):
 
 def drink(player, potion):
     if potion.name == "Health Potion":
-        if player.lives >= player.maxLives:
-            player.lives += 1
-        else:
-            player.lives += 2
+        player.lives += 1
         print(f"You now have {numStr('Life', 'Lives', player.lives)}.")
     
     if potion.name == "Strength Potion":
         player.str += 1
-        print(f"You now have {player.str} Strength.")
+        print(f"You now have {col.r}{player.str}{col.s} Strength.")
+        player.potInfo.append(["str", 3])
         
     player.inventory.remove(potion)
     return
+
+
+def potTick(player):
+    for entry in player.potInfo:
+        if entry[0] == "str":
+
+            if entry[1] == 0:
+                player.str += -1
+                print(f"{col.s}One of your potions wore off. You now have {col.r}{player.str}{col.s} strength.")
+                player.potInfo.remove(entry)
+                return
+            
+            entry[1] += -1
 
 
 def main(player):
@@ -526,6 +538,7 @@ def main(player):
             break
 
         choices = ["View stats", "Travel to another area"]
+        potTick(player)
         print(f"You are currently in {col.w}{area.name}{col.s}: {area.desc}.\n")
         
         if pot_hp in player.inventory: choices.append("Drink your Health Potion")
