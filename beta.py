@@ -371,7 +371,7 @@ def drink(player, potion):
         print(f"You now have {numStr('Life', 'Lives', player.lives)}.")
     
     if potion.name == "Strength Potion":
-        player.str += 1
+        player.str += 2
         print(f"You now have {col.r}{player.str}{col.s} Strength.")
         player.potInfo.append(["str", 3])
         
@@ -384,7 +384,7 @@ def potTick(player):
         if entry[0] == "str":
 
             if entry[1] == 0:
-                player.str += -1
+                player.str += -2
                 print(f"{col.s}One of your potions wore off. You now have {col.r}{player.str}{col.s} strength.")
                 player.potInfo.remove(entry)
                 return
