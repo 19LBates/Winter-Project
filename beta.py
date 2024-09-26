@@ -92,40 +92,86 @@ def createBorderAreas(areas):
         cur += 1
        
 
-def travel(startArea, travels):
-    curArea = startArea
+#def travel(startArea, travels):
+#    curArea = startArea
+#
+#    for x in range(travels):
+#        newArea = travelOne(curArea)
+#        if newArea == "REMAIN": break
+#        curArea = newArea
+#        clear()
+#    clear()
+#
+#    if startArea == curArea:
+#        print(f"You have {col.w}remained{col.s} in the {col.w}{startArea.name}{col.s}.")
+#        return startArea
+#
+#    print(f"You have {col.w}travelled{col.s} from the {col.w}{startArea.name}{col.s} to the {col.w}{curArea.name}{col.s}.")
+#    return curArea
 
-    for x in range(travels):
-        newArea = travelOne(curArea)
-        if newArea == "REMAIN": break
-        curArea = newArea
-        clear()
-    clear()
 
-    if startArea == curArea:
-        print(f"You have {col.w}remained{col.s} in the {col.w}{startArea.name}{col.s}.")
-        return startArea
-
-    print(f"You have {col.w}travelled{col.s} from the {col.w}{startArea.name}{col.s} to the {col.w}{curArea.name}{col.s}.")
-    return curArea
-
-
-def travelOne(curArea):
-    clear()
-    listBorderAreas(curArea)
-    areaList = curArea.borderAreas
-    choice = input("\nEnter your choice: ")
+#def travelOne(curArea):
+#    clear()
+#    listBorderAreas(curArea)
+#    areaList = curArea.borderAreas
+#    choice = input("\nEnter your choice: ")
+#    
+#    if choice == "1": return "REMAIN"
+#    
+#    try:
+#        newArea = areaList[int(choice)-2]
+#    except:
+#        print("Invalid input. Please try again. \n")
+#        return travelOne(curArea)
+#    else:
+#        return newArea
     
-    if choice == "1": return "REMAIN"
-    
-    try:
-        newArea = areaList[int(choice)-2]
-    except:
-        print("Invalid input. Please try again. \n")
-        return travelOne(curArea)
+def travel(player, startArea, exceptionAreas, forceDiceRoll = 0):
+
+    if startArea in exceptionAreas:
+        listBorderAreas(startArea)
+        choice = input("\nEnter your choice: ")
+
+        try:
+            newArea = startArea.borderAreas[int(choice)-2]
+            print(f"You have travelled from {startArea.name} to {newArea.name}")
+            return newArea
+        except:
+            clear()
+            print("Invalid input. Please try again. \n")
+            return travel(player, startArea, exceptionAreas)
+        else:
+            return newArea
+
+    if forceDiceRoll != 0:
+        roll = forceDiceRoll
     else:
-        return newArea
-    
+        roll = dice(player, 1, 6)
+    clockwiseArea = startArea
+
+    anticlockwiseArea = startArea
+    print(f"You rolled a {roll}! You can move {numStr("space", "spaces", roll)} in either direction.")
+    for x in range(roll):
+        clockwiseArea = clockwiseArea.borderAreas[1]
+        anticlockwiseArea = anticlockwiseArea.borderAreas[0]
+    print(f"{col.s}1 - {col.w}Remain in {startArea.name}{col.s}")
+    print(f"{col.s}2 - {col.w}Travel Clockwise to {clockwiseArea.name}{col.s}")
+    print(f"{col.s}3 - {col.w}Travel Anti-Clockwise to {anticlockwiseArea.name}{col.s}")
+    choice = input("\nEnter your choice: ")
+
+    if choice == "1": 
+        print(f"You have {col.w}remained{col.s} in {col.w}{startArea.name}{col.s}")
+        return startArea
+    elif choice == "2": 
+        print(f"You have {col.w}travelled Clockwise{col.s} to {col.w}{clockwiseArea.name}{col.s}")
+        return clockwiseArea
+    elif choice == "3":
+        print(f"You have {col.w}travelled Anti-Clockwise{col.s} to {col.w}{anticlockwiseArea.name}{col.s}")
+        return anticlockwiseArea
+    else:
+        clear()
+        print("Invalid input, please try again. \n")
+        return travel(player, startArea, exceptionAreas, roll)
 
 def listBorderAreas(area):
     areaList = area.borderAreas  
@@ -133,8 +179,7 @@ def listBorderAreas(area):
     i = 2
     for area in areaList:
         print(f"{col.s}{i} - {col.w}Travel to {area.name}{col.s}")
-        i += 1
-        
+        i += 1    
 
 def chooseMonster(area, player):
     monsters = area.entities
@@ -571,7 +616,7 @@ def main(player):
  
         if choice == "Travel to another area":
             clear()
-            area = travel(area, random.randint(1, 3))
+            area = travel(player, area, [desertN, eeriePlains, gate, portal])
             if area == portal:
                 print("You travel the the portal, and feel yourself moving at the speed of light, yet also at the pace of a snail. \nAfter what feels like an eternity, but also a split second, you arrive in a world, even weirder than before.")
                 area = fireTemple
