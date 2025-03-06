@@ -134,6 +134,7 @@ def travel(player, startArea, exceptionAreas, forceDiceRoll = 0):
 
         try:
             newArea = startArea.borderAreas[int(choice)-2]
+            clear()
             print(f"You have travelled from {startArea.name} to {newArea.name}")
             return newArea
         except:
